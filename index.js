@@ -1,5 +1,7 @@
+/*jslint node: true */
 'use strict';
 
+var fs = require('fs');
 var app_name;
 var app_id;
 var url_scheme;
@@ -7,6 +9,16 @@ var small_thumb;
 var large_thumb;
 var small_thumb_path;
 var large_thumb_path;
+
+function convertToBase64(filename) {
+    var binaryData,
+        base64Data;
+
+    binaryData = fs.readFileSync(filename);
+    base64Data = new Buffer(binaryData).toString('base64');
+
+    return base64Data;
+}
 
 function load(obj) {
     if (obj.app_name && obj.app_id && obj.url_scheme &&
@@ -17,6 +29,20 @@ function load(obj) {
         url_scheme = obj.url_scheme;
         small_thumb_path = obj.small_thumb_path;
         large_thumb_path = obj.large_thumb_path;
+
+        if (fs.existsSync(small_thumb_path)) {
+            small_thumb = convertToBase64(small_thumb_path);
+        } else {
+            throw new Error('Small thumb does not exist');
+        }
+
+        if (fs.existsSync(large_thumb_path)) {
+            large_thumb = convertToBase64(large_thumb_path);
+            fs.writeFileSync('test/assets/new.txt', large_thumb);
+        } else {
+            throw new Error('Large thumb does not exist');
+        }
+
     } else  {
         throw new Error('Missing required parameters!');
     }
@@ -55,6 +81,16 @@ module.exports =  {
     set large_thumb_path(value) {
         large_thumb_path = value;
     },
-    small_thumb: small_thumb,
-    large_thumb: large_thumb
+    get small_thumb() {
+        return small_thumb;
+    },
+    set small_thumb(value) {
+        small_thumb = value;
+    },
+    get large_thumb() {
+        return large_thumb;
+    },
+    set large_thumb(value) {
+        large_thumb = value;
+    }
 };

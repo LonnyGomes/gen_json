@@ -2,6 +2,7 @@
 /*jslint node: true */
 'use strict';
 var expect = require('chai').expect;
+var fs = require('fs');
 
 describe('gen-json module initial state ', function () {
     var genJson;
@@ -52,8 +53,8 @@ describe('load', function () {
             app_name: "test_name",
             app_id: "test_id",
             url_scheme: "testscheme",
-            small_thumb_path: "assets/small-thumb.png",
-            large_thumb_path: "assets/large-thumb.png"
+            small_thumb_path: "test/assets/small-thumb.png",
+            large_thumb_path: "test/assets/large-thumb.png"
         };
 
         genJson = require('../');
@@ -124,6 +125,34 @@ describe('load', function () {
     it('should populate large_thumb_path property', function () {
         genJson.load(sampleParams);
         expect(genJson.large_thumb_path).equals(sampleParams.large_thumb_path);
+    });
+
+    it('should throw an error if small_thumb_path does not exist', function () {
+        expect(function () {
+            sampleParams.small_thumb_path = "bogus_path_does_not_exist.png";
+            genJson.load(sampleParams);
+        }).to.throw(Error);
+    });
+
+    it('should throw an error if large_thumb_path does not exist', function () {
+        expect(function () {
+            sampleParams.large_thumb_path = "bogus_path_does_not_exist.png";
+            genJson.load(sampleParams);
+        }).to.throw(Error);
+    });
+
+    it('should properly generate the base64 version of small thumb', function () {
+        var base64Version = fs.readFileSync('test/assets/small-thumb.base64', 'utf8');
+
+        genJson.load(sampleParams);
+        expect(genJson.small_thumb).to.equal(base64Version);
+    });
+
+    it('should properly generate the base64 version of large thumb', function () {
+        var base64Version = fs.readFileSync('test/assets/large-thumb.base64', 'utf8');
+
+        genJson.load(sampleParams);
+        expect(genJson.large_thumb).to.equal(base64Version);
     });
 
 });
