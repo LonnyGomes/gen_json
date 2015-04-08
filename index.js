@@ -38,7 +38,6 @@ function load(obj) {
 
         if (fs.existsSync(large_thumb_path)) {
             large_thumb = convertToBase64(large_thumb_path);
-            fs.writeFileSync('test/assets/new.txt', large_thumb);
         } else {
             throw new Error('Large thumb does not exist');
         }
@@ -48,9 +47,28 @@ function load(obj) {
     }
 }
 
+function save(filename) {
+    var obj;
+
+    if (!filename) {
+        throw new Error("Fileneame is not defined");
+    }
+
+    obj = {
+        app_name: app_name,
+        app_id: app_id,
+        url_scheme: url_scheme,
+        small_thumb: small_thumb,
+        large_thumb: large_thumb
+    };
+
+    fs.writeFileSync(filename, JSON.stringify(obj, null, 4));
+}
+
 
 module.exports =  {
     load: load,
+    save: save,
     get app_name() {
         return app_name;
     },

@@ -11,10 +11,6 @@ describe('gen-json module initial state ', function () {
         genJson = require('../');
     });
 
-    it('must have load property', function () {
-        expect(genJson).to.have.property('load');
-    });
-
     it('must have an app_name property', function () {
         expect(genJson).to.have.property('app_name');
     });
@@ -141,18 +137,60 @@ describe('load', function () {
         }).to.throw(Error);
     });
 
-    it('should properly generate the base64 version of small thumb', function () {
+    it('should generate the base64 version of small thumb', function () {
         var base64Version = fs.readFileSync('test/assets/small-thumb.base64', 'utf8');
 
         genJson.load(sampleParams);
         expect(genJson.small_thumb).to.equal(base64Version);
     });
 
-    it('should properly generate the base64 version of large thumb', function () {
+    it('should generate the base64 version of large thumb', function () {
         var base64Version = fs.readFileSync('test/assets/large-thumb.base64', 'utf8');
 
         genJson.load(sampleParams);
         expect(genJson.large_thumb).to.equal(base64Version);
+    });
+
+});
+
+describe("save", function () {
+    var genJson,
+        sampleParams,
+        testOutputfile;
+
+    beforeEach(function () {
+        testOutputfile = "test/assets/testOutput.json";
+        sampleParams = {
+            app_name: "test_name",
+            app_id: "test_id",
+            url_scheme: "testscheme",
+            small_thumb_path: "test/assets/small-thumb.png",
+            large_thumb_path: "test/assets/large-thumb.png"
+        };
+
+        genJson = require('../');
+        genJson.load(sampleParams);
+    });
+
+    it("should throw an error if the filename is not defined", function () {
+        expect(function () {
+            genJson.save();
+        }).to.throw(Error);
+    });
+
+    it("should save file as a json file", function () {
+        var obj,
+            objStr;
+
+        genJson.save(testOutputfile);
+        objStr = fs.readFileSync(testOutputfile);
+        obj = JSON.parse(objStr);
+
+        expect(obj.app_name).to.equal(genJson.app_name);
+        expect(obj.app_id).to.equal(genJson.app_id);
+        expect(obj.url_scheme).to.equal(genJson.url_scheme);
+        expect(obj.small_thumb).to.equal(genJson.small_thumb);
+        expect(obj.large_thumb).to.equal(genJson.large_thumb);
     });
 
 });
