@@ -1,6 +1,6 @@
 {
   "name": "gen-json",
-  "version": "0.0.0",
+  "version": "0.5.0",
   "description": "Generates a json file",
   "author": {
     "name": "",
