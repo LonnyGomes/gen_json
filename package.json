@@ -31,7 +31,7 @@
     "time-grunt": "^1.1.0"
   },
   "scripts": {
-    "test": "grunt"
+    "test": "mocha"
   },
   "bin": {
     "gen-json": "cli.js"
