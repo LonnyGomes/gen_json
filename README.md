@@ -1,5 +1,4 @@
-#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-
+[![Build Status](https://travis-ci.org/SpinningPropeller/gen_json.svg)](https://travis-ci.org/SpinningPropeller/gen_json)
 > Generates a json file
 
 
